@@ -2,6 +2,7 @@ import Pie from "paths-js/pie";
 import React from "react";
 import { View, ViewStyle } from "react-native";
 import { G, Path, Rect, Svg, Text } from "react-native-svg";
+import { roundNumber } from "../Utils";
 
 import AbstractChart, { AbstractChartProps } from "./AbstractChart";
 
@@ -17,6 +18,7 @@ export interface PieChartProps extends AbstractChartProps {
   hasLegend?: boolean;
   style?: Partial<ViewStyle>;
   avoidFalseZero?: boolean;
+  roundPercentage?: number;
 }
 
 type PieChartState = {};
@@ -56,10 +58,8 @@ class PieChart extends AbstractChart<PieChartProps, PieChartState> {
         if (total === 0) {
           value = 0 + "%";
         } else {
-          const percentage = Math.round(
-            (100 / total) * c.item[this.props.accessor]
-          );
-          value = Math.round((100 / total) * c.item[this.props.accessor]) + "%";
+          const percentage = roundNumber((100 / total) * c.item[this.props.accessor], this.props.roundPercentage ?? 0)
+          //value = Math.round((100 / total) * c.item[this.props.accessor]) + "%";
           if (avoidFalseZero && percentage === 0) {
             value = "<1%";
           } else {
